@@ -394,6 +394,30 @@ button[disabled]{opacity:.5;cursor:not-allowed}
 .cn button.save{font-size:11px;padding:4px 9px;background:transparent;color:var(--gov);border-color:var(--rule);font-weight:500;letter-spacing:0}
 .cn button.save:hover{background:var(--gov-soft);filter:none}
 .cn.stamp::after{content:"미해결";position:absolute;right:14px;top:52px;border:2px double var(--seal);color:var(--seal);font-family:"Noto Serif KR",serif;font-weight:700;font-size:13px;letter-spacing:.25em;padding:2px 4px 2px 8px;transform:rotate(-10deg);opacity:.8}
+
+/* support / goods / share */
+.support-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:600px){.support-grid{grid-template-columns:1fr}}
+.support-box{border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.support-box h4{font-family:"Noto Serif KR",serif;font-size:15px;margin:0}
+.support-box p{margin:0}
+.big-zero{font-family:"Noto Serif KR",serif;font-size:44px;font-weight:700;line-height:1;color:var(--seal)}
+.big-zero span{font-size:18px;margin-left:4px;color:var(--ink-2)}
+.share{margin-top:18px;border-top:1px dashed var(--rule);padding-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.share-btns{display:flex;gap:8px;flex-wrap:wrap}
+.share-btns button,.share-btns a.btn{font-size:13px;padding:8px 14px}
+
+/* certificate */
+.cc-foot button.cert{font-size:12px;padding:5px 10px;letter-spacing:0;font-weight:500}
+.modal{position:fixed;inset:0;background:rgba(10,14,20,.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal-box{background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-top:4px solid var(--gov);max-width:520px;width:100%;max-height:calc(100% - 32px);overflow:auto;padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.modal-box h3{font-size:18px}
+.modal-box .actions{margin-top:4px}
+.cert-preview{border:1px solid var(--rule);background:var(--paper-2);min-height:120px;display:flex;align-items:center;justify-content:center}
+.cert-preview img{max-width:100%;display:block}
+.cert-preview img:not([src]){display:none}
+
+a.btn.disabled{opacity:.5;pointer-events:none}
 </style>
 </head>
 <body>
@@ -603,8 +627,9 @@ button[disabled]{opacity:.5;cursor:not-allowed}
   <p>아래 항목을 작성하면 연구소 표준 서식의 제보서가 생성되고, 작성 내용이 채워진 접수 서식이 열립니다. 실명·주소는 적지 마십시오.</p>
   <dl class="def procedure">
     <dt>절차</dt><dd>접수 → 연구소 검토 → 판정 통지. 판정까지 <b>1~3일</b> 소요될 수 있습니다.</dd>
-    <dt>확정 시</dt><dd>사건 번호가 부여되고, 이메일을 남긴 경우 <b>객원연구원 임명장</b>이 발송됩니다. 급여는 없고, 직함은 있습니다.</dd>
-    <dt>반려 시</dt><dd>판정 기준 미충족(방제 이력 있음 등) 또는 진술 불충분 시 반려 통지가 발송됩니다. 보완 후 재접수할 수 있습니다.</dd>
+    <dt>확정 시</dt><dd>사건 번호가 부여되고, 사건 기록부의 해당 사례에서 <b>객원연구원 임명장</b>을 직접 발급받을 수 있습니다. 급여는 없고, 직함은 있습니다.</dd>
+    <dt>반려 시</dt><dd>판정 기준 미충족(방제 이력 있음 등) 또는 진술 불충분 시 반려 사유와 함께 기록부에 표시됩니다. 보완 후 재접수할 수 있습니다.</dd>
+    <dt>개인정보</dt><dd>이름·이메일·주소를 수집하지 않습니다. 임명장의 이름은 발급 시 본인 브라우저에서만 입력되며 저장되지 않습니다.</dd>
   </dl>
 
   <form class="form" id="form" autocomplete="off">
@@ -667,14 +692,9 @@ button[disabled]{opacity:.5;cursor:not-allowed}
       <label for="f-story">진술 (자유 서술)</label>
       <textarea id="f-story" name="story" placeholder="언제부터 개미를 못 봤는지, 이상하다고 느낀 순간, 주변 반응 등 무엇이든."></textarea>
     </div>
-    <div class="field">
+    <div class="field full">
       <label for="f-guess">본인 가설 (선택)</label>
       <input id="f-guess" name="guess" placeholder="예: 내가 개미한테 뭘 잘못했나">
-    </div>
-    <div class="field">
-      <label for="f-email">임명장 수령용 이메일 (선택)</label>
-      <input id="f-email" name="email" type="email" placeholder="사례 확정 시 연구원 임명장을 보냅니다">
-      <span class="hint">임명장·판정 통지 외의 용도로는 쓰지 않습니다.</span>
     </div>
 
     <div class="actions">
@@ -692,14 +712,59 @@ button[disabled]{opacity:.5;cursor:not-allowed}
   </form>
 </section>
 
+<section id="support">
+  <div class="sec-head"><span class="sec-no mono">제5조의2</span><h2>연구 예산 및 후원</h2></div>
+  <div class="support-grid">
+    <div class="support-box">
+      <h4>연구 예산 현황</h4>
+      <p class="big-zero">0<span>원</span></p>
+      <p class="hint">당해 연도 배정 없음. 연구소는 예산 없이도 운영되지만, 있으면 도메인을 삽니다.</p>
+      <a class="btn primary" id="btn-donate" href="__DONATE_URL__" target="_blank" rel="noopener">연구 예산 채우기</a>
+      <p class="hint" id="donate-note">익명 후원 · 금액 자유 · 영수증 없음</p>
+    </div>
+    <div class="support-box">
+      <h4>연구소 물품</h4>
+      <p>임명장 액자, 객원연구원증, 연구소 인장 스티커. 주문 시 제작되며 재고는 개미처럼 없습니다.</p>
+      <a class="btn secondary" id="btn-goods" href="__GOODS_URL__" target="_blank" rel="noopener">물품 보급소</a>
+      <p class="hint" id="goods-note">준비 중</p>
+    </div>
+  </div>
+  <div class="share">
+    <span class="hint">이 현상을 겪은 사람이 더 있을 겁니다. 알려 주십시오.</span>
+    <div class="share-btns">
+      <button type="button" class="secondary" id="share-copy">링크 복사</button>
+      <a class="btn secondary" id="share-x" href="#" target="_blank" rel="noopener">X에 공유</a>
+      <button type="button" class="secondary" id="share-native" hidden>공유하기</button>
+    </div>
+  </div>
+</section>
+
 <section id="faq" class="faq">
   <div class="sec-head"><span class="sec-no mono">제6조</span><h2>자주 묻는 질문</h2></div>
   <details><summary>진짜 연구소인가요?</summary><p>아닙니다. 하지만 현상은 진짜입니다.</p></details>
   <details><summary>개미가 없어지는 게 왜 문제죠? 좋은 거 아닌가요?</summary><p>문제가 아닙니다. 설명이 안 되는 것이 문제입니다. 연구소는 좋은 일이라도 이유를 알고 싶습니다.</p></details>
   <details><summary>저는 반대로 이사 오면 개미가 생기는데요.</summary><p>그것도 제보해 주십시오. 역방향 사례(R-PMAV)는 별도 기록부를 열 예정입니다. 두 분이 이웃이 되면 어떤 일이 벌어지는지도 관심 대상입니다.</p></details>
-  <details><summary>제보하면 뭘 받나요?</summary><p>사건 번호를 받습니다. 그 외에는 없습니다.</p></details>
+  <details><summary>제보하면 뭘 받나요?</summary><p>사건 번호를 받습니다. 사례가 확정되면 사건 기록부에서 객원연구원 임명장을 직접 발급받을 수 있습니다. 그 외에는 없습니다.</p></details>
+  <details><summary>임명장에 아무 이름이나 넣어도 되나요?</summary><p>됩니다. 연구소는 확인할 방법이 없고, 확인할 생각도 없습니다. 임명장의 법적 효력은 없으며, 개미도 이를 인정하지 않습니다.</p></details>
   <details><summary>연구소에 들어가고 싶어요.</summary><p>사례가 확정된 분은 자동으로 연구원이 됩니다. 급여는 없고, 직함은 있습니다.</p></details>
 </section>
+
+
+<div class="modal" id="cert-modal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="cert-title">
+    <h3 id="cert-title">객원연구원 임명장 발급</h3>
+    <p class="hint" id="cert-sub">사건 #0000 · 이름은 저장되지 않고 이 브라우저에서만 사용됩니다.</p>
+    <label for="cert-name">임명장에 들어갈 이름</label>
+    <input id="cert-name" maxlength="20" placeholder="예: 김개미, 302호 거주자">
+    <canvas id="cert-canvas" width="1240" height="1754" hidden></canvas>
+    <div class="cert-preview"><img id="cert-img" alt="임명장 미리보기"></div>
+    <div class="actions">
+      <button type="button" id="cert-render">미리보기</button>
+      <button type="button" class="secondary" id="cert-download" disabled>PNG로 저장</button>
+      <button type="button" class="secondary" id="cert-close">닫기</button>
+    </div>
+  </div>
+</div>
 
 <footer class="site-footer">
   <b>한국개미실종연구소</b> · 소재지: 창립자가 현재 거주 중이며 개미가 없는 곳<br>
@@ -718,10 +783,11 @@ button[disabled]{opacity:.5;cursor:not-allowed}
       'f-type': 2045971317,
       'f-region': 614827672, 'f-when': 348866768, 'f-house': 1999747317, 'f-ant': 1978348925,
       'f-days': 591022867, 'f-pest': 2097308067, 'f-count': 394191204, 'f-witness': 1310387776,
-      'f-story': 1867370905, 'f-guess': 511218480,
-      'f-email': 1686297963
+      'f-story': 1867370905, 'f-guess': 511218480
     },
-    FOUNDER_COUNT: 1
+    FOUNDER_COUNT: 1,
+    SITE_URL: 'https://keev-lim.github.io/ant-institute/',
+    SHOW_UNJUDGED: false   // true면 판정 전 제보도 '검토 중'으로 표시
   };
 
   /* ===== 제보서 생성 / 접수 ===== */
@@ -859,7 +925,7 @@ button[disabled]{opacity:.5;cursor:not-allowed}
     if(j==='확정') return 'confirmed';
     if(j==='반려') return 'rejected';
     if(j==='보류') return 'pending';
-    // 자동 예비 판정 (검토 전)
+    if(!CONFIG.SHOW_UNJUDGED) return 'hidden';   // 검수 전에는 비공개
     if((c.pest||'').indexOf('있음')===0) return 'pending';
     if(c.witness==='본인만 인지') return 'pending';
     return 'review';
@@ -882,6 +948,7 @@ button[disabled]{opacity:.5;cursor:not-allowed}
     var foot=el('div','cc-foot');foot.appendChild(el('span',null,'접수 '+c.date));
     if(c.cls==='rejected'&&c.reason) foot.appendChild(el('span',null,'반려 사유: '+c.reason));
     if(c.cls==='review') foot.appendChild(el('span',null,'연구소 검토 중 (1~3일)'));
+    if(c.cls==='confirmed'){var cb=el('button','cert','객원연구원 임명장 발급');cb.type='button';cb.addEventListener('click',function(){openCert(c);});foot.appendChild(cb);}
     body.appendChild(foot);a.appendChild(body);
     return a;
   }
@@ -978,6 +1045,64 @@ button[disabled]{opacity:.5;cursor:not-allowed}
     if(c.cls==='confirmed'){x.save();x.translate(S-180,190);x.rotate(-10*Math.PI/180);x.strokeStyle=seal;x.lineWidth=5;x.strokeRect(-100,-40,200,80);x.strokeRect(-92,-32,184,64);x.fillStyle=seal;x.font='700 44px '+serif;x.textAlign='center';x.textBaseline='middle';x.fillText('미 해 결',0,2);x.restore();}
     cv.toBlob(function(blob){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='KIADS-case-'+pad(c.no)+'.png';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);},'image/png');
   }
+
+  /* ===== 임명장 발급 (브라우저 내 생성, 저장 없음) ===== */
+  var certCase=null;
+  var M=document.getElementById('cert-modal'),cName=document.getElementById('cert-name'),cImg=document.getElementById('cert-img'),cDl=document.getElementById('cert-download');
+  function openCert(c){certCase=c;document.getElementById('cert-sub').textContent='사건 #'+pad(c.no)+' · 이름은 저장되지 않고 이 브라우저에서만 사용됩니다.';cName.value='';cImg.removeAttribute('src');cDl.disabled=true;M.hidden=false;setTimeout(function(){cName.focus();},50);}
+  document.getElementById('cert-close').addEventListener('click',function(){M.hidden=true;});
+  M.addEventListener('click',function(e){if(e.target===M)M.hidden=true;});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')M.hidden=true;});
+  function wrapLine(x,text,maxW){var out=[],line='';for(var i=0;i<text.length;i++){var t=line+text[i];if(x.measureText(t).width>maxW&&line){out.push(line);line=text[i];}else line=t;}if(line)out.push(line);return out;}
+  function drawCert(c,name){
+    var cv=document.getElementById('cert-canvas'),W=cv.width,H=cv.height,x=cv.getContext('2d');
+    var navy='#1f4e8c',ink='#1b1f24',mute='#6b7a90',rule='#d6dbe3',seal='#b3261e';
+    var serif='"Noto Serif KR","Apple Myungjo",Batang,serif',sans='"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif';
+    x.fillStyle='#fff';x.fillRect(0,0,W,H);
+    x.strokeStyle=navy;x.lineWidth=6;x.strokeRect(60,60,W-120,H-120);x.lineWidth=1.5;x.strokeRect(78,78,W-156,H-156);
+    x.textBaseline='top';x.textAlign='center';
+    x.fillStyle=navy;x.font='700 34px '+serif;x.fillText('한국개미실종연구소',W/2,150);
+    x.fillStyle=mute;x.font='400 18px '+sans;x.fillText('Korea Institute for Ant Disappearance Studies',W/2,196);
+    x.fillStyle=ink;x.font='700 96px '+serif;x.fillText('임 명 장',W/2,300);
+    x.fillStyle=mute;x.font='400 22px '+sans;x.fillText('제 KIADS-A-'+pad(c.no)+' 호',W/2,420);
+    x.fillStyle=ink;x.font='700 60px '+serif;x.fillText(name,W/2,540);
+    x.strokeStyle=rule;x.lineWidth=2;x.beginPath();x.moveTo(W/2-260,620);x.lineTo(W/2+260,620);x.stroke();
+    x.fillStyle=ink;x.font='400 30px '+sans;
+    var body='위 사람은 사건 #'+pad(c.no)+'의 당사자로서, 입주 후 개미 소실 현상(PMAV)의 판정 기준을 모두 충족하였기에 이에 한국개미실종연구소 객원연구원으로 임명합니다.';
+    var lines=wrapLine(x,body,W-300),y=690;lines.forEach(function(l){x.fillText(l,W/2,y);y+=50;});
+    y+=40;x.textAlign='left';x.fillStyle=ink;x.font='400 26px '+sans;
+    var dutyX=170;
+    [['직무','다음 이사 때 개미가 또 사라지는지 관찰하고, 이사 나간 집에 개미가 돌아오는지 가능하면 확인할 것'],['급여','없음'],['임기','개미가 돌아올 때까지'],['효력','없음 (개미도 인정하지 않음)']].forEach(function(p){
+      x.fillStyle=mute;x.font='700 22px '+sans;x.fillText(p[0],dutyX,y+4);x.fillStyle=ink;x.font='400 26px '+sans;
+      var ls=wrapLine(x,p[1],W-dutyX-260);ls.forEach(function(l,i){x.fillText(l,dutyX+90,y+i*40);});y+=Math.max(1,ls.length)*40+16;});
+    var d=new Date(),ds=d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일';
+    x.textAlign='center';x.fillStyle=ink;x.font='400 28px '+sans;x.fillText(ds,W/2,H-420);
+    x.fillStyle=ink;x.font='700 40px '+serif;x.fillText('한국개미실종연구소장',W/2,H-350);
+    x.save();x.translate(W/2+330,H-330);x.rotate(-8*Math.PI/180);x.strokeStyle=seal;x.lineWidth=5;x.strokeRect(-70,-70,140,140);x.strokeRect(-62,-62,124,124);x.fillStyle=seal;x.font='700 44px '+serif;x.textBaseline='middle';x.fillText('개미',0,-26);x.fillText('없음',0,26);x.restore();
+    x.textBaseline='top';x.fillStyle=mute;x.font='400 18px '+sans;x.fillText('연구소는 어떠한 학술 단체에도 소속되어 있지 않으며, 개미에게 해를 가하지 않습니다. · '+(CONFIG.SITE_URL||'').replace(/^https?:\/\//,'').replace(/\/$/,''),W/2,H-170);
+    return cv;
+  }
+  document.getElementById('cert-render').addEventListener('click',function(){
+    var name=(cName.value||'').trim();if(!name){cName.focus();return;}
+    if(document.fonts&&document.fonts.load){Promise.all([document.fonts.load('700 60px "Noto Serif KR"'),document.fonts.load('400 30px "Noto Sans KR"')]).then(go,go);}else go();
+    function go(){var cv=drawCert(certCase,name);cImg.src=cv.toDataURL('image/png');cDl.disabled=false;}
+  });
+  cDl.addEventListener('click',function(){
+    var cv=document.getElementById('cert-canvas');cv.toBlob(function(blob){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='KIADS-임명장-'+pad(certCase.no)+'.png';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);},'image/png');
+  });
+
+  /* ===== 후원 / 굿즈 / 공유 ===== */
+  (function(){
+    var DON='__DONATE_URL__',GOODS='__GOODS_URL__';
+    var bd=document.getElementById('btn-donate'),bg=document.getElementById('btn-goods');
+    if(!DON||DON.indexOf('__')===0){bd.removeAttribute('href');bd.classList.add('disabled');bd.textContent='후원 창구 개설 준비 중';document.getElementById('donate-note').textContent='연구소는 아직 돈 받을 준비도 안 되어 있습니다.';}
+    if(!GOODS||GOODS.indexOf('__')===0){bg.removeAttribute('href');bg.classList.add('disabled');}
+    var url=CONFIG.SITE_URL||location.href;
+    var text='이사 오면 개미가 사라지는 현상(PMAV)을 조사하는 한국개미실종연구소. 설명 가능 비율 0%. 제보 접수 중.';
+    document.getElementById('share-x').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url);
+    document.getElementById('share-copy').addEventListener('click',function(){var b=this;function ok(){b.textContent='복사됨';setTimeout(function(){b.textContent='링크 복사';},1500);}if(navigator.clipboard)navigator.clipboard.writeText(url).then(ok,function(){prompt('링크',url);});else prompt('링크',url);});
+    if(navigator.share){var sn=document.getElementById('share-native');sn.hidden=false;sn.addEventListener('click',function(){navigator.share({title:'한국개미실종연구소',text:text,url:url}).catch(function(){});});}
+  })();
 
   function load(){
     var st=document.getElementById('cases-status');
