@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# AI crawlers welcome. 연구소는 숨길 것이 없습니다. 개미도 없습니다.
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://keev-lim.github.io/ant-institute/sitemap.xml
